@@ -1,11 +1,18 @@
+using MicroserviceTwo.Repositories;
+using MicroserviceTwo.Services;
 using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddControllers();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ICuentaRepository, CuentaRepository>();
+builder.Services.AddScoped<ICuentaService, CuentaService>();
+builder.Services.AddScoped<IMovimientoRepository, MovimientoRepository>();
+builder.Services.AddScoped<IMovimientoService, MovimientoService>();
 
 // Configuración RabbitMQ
 builder.Services.AddSingleton<IConnection>(sp =>
