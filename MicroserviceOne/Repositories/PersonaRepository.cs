@@ -27,6 +27,7 @@ namespace MicroserviceOne.Repositories
         {
             await _context.Persona.AddAsync(persona);
             await _context.SaveChangesAsync();
+            _context.Entry(persona).State = EntityState.Detached;
         }
 
         public async Task UpdatePersona(Persona persona)

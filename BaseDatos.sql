@@ -9,14 +9,17 @@ CREATE TABLE Persona (
     Edad INT,
     Identificacion NVARCHAR(20) NOT NULL,
     Direccion NVARCHAR(MAX),
-    Telefono NVARCHAR(20)
+    Telefono NVARCHAR(20), 
+	UNIQUE(Identificacion)
 );
 
 CREATE TABLE Cliente (
-    PersonaId INT PRIMARY KEY,  -- PersonaId es la PK y FK hacia Persona
+    ClienteId INT PRIMARY KEY IDENTITY(1,1),
+    PersonaId INT NOT NULL,
     Contrasena NVARCHAR(100) NOT NULL,
     Estado BIT,
-    FOREIGN KEY (PersonaId) REFERENCES Persona(PersonaId)
+    FOREIGN KEY (PersonaId) REFERENCES Persona(PersonaId),
+    UNIQUE (PersonaId) -- This makes both columns unique together.
 );
 
 CREATE TABLE Cuenta (

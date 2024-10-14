@@ -1,4 +1,5 @@
 ﻿using MicroserviceOne.Models;
+using MicroserviceOne.Repositories;
 using MicroserviceOne.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,22 +10,22 @@ namespace MicroserviceOne.Controllers
     [ApiController]
     public class PersonaController : ControllerBase
     {
-        private readonly IPersonaService _personaService;
-        public PersonaController(IPersonaService personaService)
+        private readonly IPersonaRepository _repository;
+        public PersonaController(IPersonaRepository repository)
         {
-            _personaService = personaService;
+            _repository = repository;
         }
         [HttpGet]
         public async Task<IActionResult> GetPersonas()
         {
-            var personas = await _personaService.GetPersonas();
+            var personas = await _repository.GetPersonas();
             return Ok(personas);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPersonaById(int id)
         {
-            var persona = await _personaService.GetPersonaById(id);
+            var persona = await _repository.GetPersonaById(id);
             if (persona == null)
                 return NotFound();
 
@@ -37,7 +38,7 @@ namespace MicroserviceOne.Controllers
             if (persona == null)
                 return BadRequest();
 
-            await _personaService.AddPersona(persona);
+            await _repository.AddPersona(persona);
             return CreatedAtAction(nameof(GetPersonaById), new { id = persona.PersonaId }, persona);
         }
 
@@ -47,14 +48,14 @@ namespace MicroserviceOne.Controllers
             if (persona == null || id != persona.PersonaId)
                 return BadRequest();
 
-            await _personaService.UpdatePersona(persona);
+            await _repository.UpdatePersona(persona);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePersona(int id)
         {
-            await _personaService.DeletePersona(id);
+            await _repository.DeletePersona(id);
             return NoContent();
         }
     }

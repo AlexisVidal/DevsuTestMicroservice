@@ -12,8 +12,18 @@ namespace MicroserviceOne.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Cliente>()
-                .ToTable("Cliente")
-                .HasBaseType<Persona>(); // Cliente hereda de Persona
+            .HasOne(c => c.Persona)
+            .WithOne(p => p.Cliente)
+            .HasForeignKey<Cliente>(c => c.PersonaId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Cliente>()
+            .HasIndex(c => new { c.ClienteId, c.PersonaId })
+            .IsUnique();
+
+            modelBuilder.Entity<Cliente>()
+                .HasIndex(c => new { c.PersonaId })
+                .IsUnique();
 
             base.OnModelCreating(modelBuilder);
         }

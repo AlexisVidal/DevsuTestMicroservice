@@ -1,10 +1,11 @@
 ﻿using MicroserviceOne.Data;
+using MicroserviceOne.Dto;
 using MicroserviceOne.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MicroserviceOne.Repositories
 {
-    public class ClienteRepository:IClienteRepository
+    public class ClienteRepository : IClienteRepository
     {
         private readonly AppDbContext _context;
 
@@ -15,36 +16,16 @@ namespace MicroserviceOne.Repositories
 
         public async Task<IEnumerable<Cliente>> GetClientes()
         {
-            return await _context.Cliente.Select(c => new Cliente
-            {
-                PersonaId = c.PersonaId,
-                Nombre = c.Nombre,
-                Genero = c.Genero,
-                Edad = c.Edad,
-                Direccion = c.Direccion,
-                Identificacion = c.Identificacion,
-                Telefono = c.Telefono,
-                Contrasena = c.Contrasena,
-                Estado = c.Estado
-            })
-        .ToListAsync();
+            return await _context.Cliente
+                .Include(q => q.Persona)
+                .ToListAsync();
         }
 
         public async Task<Cliente> GetClienteById(int id)
         {
             return await _context.Cliente
-                .Select(c => new Cliente
-            {
-                PersonaId = c.PersonaId,
-                Nombre = c.Nombre,
-                Genero = c.Genero,
-                Edad = c.Edad,
-                Direccion = c.Direccion,
-                Identificacion = c.Identificacion,
-                Telefono = c.Telefono,
-                Contrasena = c.Contrasena,
-                Estado = c.Estado
-            }).FirstOrDefaultAsync(p => p.PersonaId == id);
+                .Include(q => q.Persona)
+                .FirstOrDefaultAsync(p => p.PersonaId == id);
         }
 
         public async Task AddCliente(Cliente cliente)

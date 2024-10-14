@@ -1,4 +1,5 @@
-﻿using MicroserviceOne.Models;
+﻿using MicroserviceOne.Dto;
+using MicroserviceOne.Models;
 
 namespace MicroserviceOne.Repositories
 {
