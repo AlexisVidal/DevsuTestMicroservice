@@ -5,6 +5,17 @@ using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
 builder.Services.AddControllers();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,7 +33,7 @@ builder.Services.AddScoped<IClienteService, ClienteService>();
 //Configuracion Rabbitmq
 builder.Services.AddSingleton<IConnection>(sp =>
 {
-    var connFactory = new ConnectionFactory() { HostName = "rabbitmq"};
+    var connFactory = new ConnectionFactory() { HostName = "localhost" };
     return connFactory.CreateConnection();
 });
 builder.Services.AddSingleton<IModel>(sp =>
@@ -40,10 +51,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("AllowAll");
+app.MapControllers();
+//app.UseHttpsRedirection();
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

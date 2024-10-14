@@ -9,8 +9,5 @@
         public string Identificacion { get; set; }
         public string Direccion { get; set; }
         public string Telefono { get; set; }
-
-        // Relación 1:1 con Cliente
-        public Cliente Cliente { get; set; }
     }
 }

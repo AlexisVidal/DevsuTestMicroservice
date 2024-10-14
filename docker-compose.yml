@@ -1,15 +1,29 @@
 version: '3.4'
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  # Puerto para la conexión de clientes
+      - "15672:15672" # Puerto para la interfaz web de administración
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      
   microserviceone:
     image: microserviceone
     build:
       context: .
       dockerfile: MicroserviceOne/Dockerfile
     ports:
-      - "5001:80"
+      - "7052:80"
+    networks:
+      - app-network
     depends_on:
       - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
   
   microservicetwo:
     image: microservicetwo
@@ -17,12 +31,14 @@ services:
       context: .
       dockerfile: MicroserviceTwo/Dockerfile
     ports:
-      - "5002:80"
+      - "7039:80"
+    networks:
+      - app-network
     depends_on:
       - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "15672:15672"
-      - "5672:5672"
+networks:
+  app-network:
+    driver: bridge

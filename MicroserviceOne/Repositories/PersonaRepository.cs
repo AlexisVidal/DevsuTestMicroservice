@@ -15,32 +15,32 @@ namespace MicroserviceOne.Repositories
 
         public async Task<IEnumerable<Persona>> GetPersonas()
         {
-            return await _context.Personas.Include(p => p.Cliente).ToListAsync();
+            return await _context.Persona.ToListAsync();
         }
 
         public async Task<Persona> GetPersonaById(int id)
         {
-            return await _context.Personas.Include(p => p.Cliente).FirstOrDefaultAsync(p => p.PersonaId == id);
+            return await _context.Persona.FirstOrDefaultAsync(p => p.PersonaId == id);
         }
 
         public async Task AddPersona(Persona persona)
         {
-            await _context.Personas.AddAsync(persona);
+            await _context.Persona.AddAsync(persona);
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdatePersona(Persona persona)
         {
-            _context.Personas.Update(persona);
+            _context.Persona.Update(persona);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeletePersona(int id)
         {
-            var persona = await _context.Personas.FindAsync(id);
+            var persona = await _context.Persona.FindAsync(id);
             if (persona != null)
             {
-                _context.Personas.Remove(persona);
+                _context.Persona.Remove(persona);
                 await _context.SaveChangesAsync();
             }
         }

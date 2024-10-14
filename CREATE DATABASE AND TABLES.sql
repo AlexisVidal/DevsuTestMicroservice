@@ -1,6 +1,6 @@
-CREATE DATABASE Devsu
+CREATE DATABASE DevsuTest
 GO
-USE Devsu
+USE DevsuTest
 GO
 CREATE TABLE Persona (
     PersonaId INT PRIMARY KEY IDENTITY(1,1),
