@@ -1,0 +1,75 @@
+Clientes
+=======
+get -> https://localhost:7052/api/Cliente
+get -> https://localhost:7052/api/Cliente/1
+post -> https://localhost:7052/api/Cliente 
+{
+  "personaId": 0,
+  "nombre": "ALEXIS VIDAL",
+  "genero": "MASCULINO",
+  "edad": 39,
+  "identificacion": "42738236",
+  "direccion": "PIURA",
+  "telefono": "944078982",
+  "contrasena": "2424"
+}
+put -> https://localhost:7052/api/Cliente/3
+{
+    "personaId": 0,
+    "nombre": "ALEXIS VIDAL",
+    "genero": "MASCULINO",
+    "edad": 42,
+    "identificacion": "42738236",
+    "direccion": "PIURA",
+    "telefono": "944078982",
+    "contrasena": "2424"
+  }
+  delete -> https://localhost:7052/api/Cliente/3
+
+  Cuentas
+  =======
+get -> https://localhost:7052/api/Cuenta
+get -> https://localhost:7052/api/Cuenta/1
+post -> https://localhost:7052/api/Cuenta 
+{
+    "CuentaId": 0,
+    "NumeroCuenta": "5232366",
+    "PersonaId": 3,
+    "TipoCuenta": "CORRIENTE",
+    "SaldoInicial": 1500,
+    "Estado": true
+  }
+put -> https://localhost:7052/api/Cuenta/3
+{
+    "CuentaId": 2,
+    "NumeroCuenta": "5232366",
+    "PersonaId": 3,
+    "TipoCuenta": "AHORRO",
+    "SaldoInicial": 1110,
+    "Estado": true
+}
+  delete -> https://localhost:7052/api/Cuenta/3
+
+  Movimientos
+  =======
+get -> https://localhost:7052/api/Movimiento
+get -> https://localhost:7052/api/Movimiento/1
+post -> https://localhost:7052/api/Movimiento 
+{
+    "MovimientoId": 0,
+    "CuentaId": 3,
+    "Fecha": "2024-10-15T22:58:26.283Z",
+    "TipoMovimiento": "string",
+    "Valor": 600,
+    "Saldo": 500
+  }
+put -> https://localhost:7052/api/Movimiento/3
+{
+    "MovimientoId": 2,
+    "CuentaId": 3,
+    "Fecha": "2024-10-15T22:58:26.283Z",
+    "TipoMovimiento": "string",
+    "Valor": 600,
+    "Saldo": 500
+  }
+  delete -> https://localhost:7052/api/Movimiento/3
