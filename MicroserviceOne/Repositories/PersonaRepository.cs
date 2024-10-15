@@ -45,5 +45,10 @@ namespace MicroserviceOne.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<Persona> GetPersonaByIdentificacion(string identificacion)
+        {
+            return await _context.Persona.FirstOrDefaultAsync(p => p.Identificacion.Equals(identificacion));
+        }
     }
 }

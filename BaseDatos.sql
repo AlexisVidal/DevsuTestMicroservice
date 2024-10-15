@@ -19,7 +19,7 @@ CREATE TABLE Cliente (
     Contrasena NVARCHAR(100) NOT NULL,
     Estado BIT,
     FOREIGN KEY (PersonaId) REFERENCES Persona(PersonaId),
-    UNIQUE (PersonaId) -- This makes both columns unique together.
+    UNIQUE (PersonaId)
 );
 
 CREATE TABLE Cuenta (

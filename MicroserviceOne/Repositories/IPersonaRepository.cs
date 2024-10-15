@@ -9,5 +9,6 @@ namespace MicroserviceOne.Repositories
         Task AddPersona(Persona persona);
         Task UpdatePersona(Persona persona);
         Task DeletePersona(int id);
+        Task<Persona> GetPersonaByIdentificacion(string identificacion);
     }
 }

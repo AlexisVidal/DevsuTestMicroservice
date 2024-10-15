@@ -25,7 +25,7 @@ namespace MicroserviceOne.Repositories
         {
             return await _context.Cliente
                 .Include(q => q.Persona)
-                .FirstOrDefaultAsync(p => p.PersonaId == id);
+                .FirstOrDefaultAsync(p => p.ClienteId == id);
         }
 
         public async Task AddCliente(Cliente cliente)
@@ -45,7 +45,8 @@ namespace MicroserviceOne.Repositories
             var cliente = await _context.Cliente.FindAsync(id);
             if (cliente != null)
             {
-                _context.Cliente.Remove(cliente);
+                cliente.Estado = false;
+                _context.Cliente.Update(cliente);
                 await _context.SaveChangesAsync();
             }
         }
