@@ -1,6 +1,7 @@
 ﻿using MicroserviceOne.Data;
 using MicroserviceOne.Dto;
 using MicroserviceOne.Models;
+using MicroserviceOne.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace MicroserviceOne.Repositories

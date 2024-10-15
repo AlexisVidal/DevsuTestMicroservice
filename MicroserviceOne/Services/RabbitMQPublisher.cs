@@ -1,4 +1,6 @@
-﻿using RabbitMQ.Client;
+﻿using MicroserviceOne.Dto;
+using Newtonsoft.Json;
+using RabbitMQ.Client;
 using System.Text;
 
 namespace MicroserviceOne.Services
@@ -11,19 +13,17 @@ namespace MicroserviceOne.Services
         {
             _channel = channel;
         }
-
-        public void Publish(string message)
+        public void PublishResponse(ClienteResponseDto clienteDto, string replyToQueue, string correlationId)
         {
-            _channel.QueueDeclare(queue: "microservicetwo_queue",
-                                 durable: false,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
-
+            var message = JsonConvert.SerializeObject(clienteDto);
             var body = Encoding.UTF8.GetBytes(message);
+
+            var properties = _channel.CreateBasicProperties();
+            properties.CorrelationId = correlationId; // Asegúrate de que el CorrelationId se establezca correctamente
+
             _channel.BasicPublish(exchange: "",
-                                 routingKey: "microservicetwo_queue",
-                                 basicProperties: null,
+                                 routingKey: replyToQueue,
+                                 basicProperties: properties,
                                  body: body);
         }
     }

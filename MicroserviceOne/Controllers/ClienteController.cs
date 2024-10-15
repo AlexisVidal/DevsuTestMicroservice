@@ -1,6 +1,7 @@
 ﻿using MicroserviceOne.Dto;
 using MicroserviceOne.Models;
 using MicroserviceOne.Repositories;
+using MicroserviceOne.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -14,10 +15,12 @@ namespace MicroserviceOne.Controllers
     {
         private readonly IClienteRepository _repository;
         private readonly IPersonaRepository _personaRepository;
-        public ClienteController(IClienteRepository repository, IPersonaRepository personaRepository)
+        private readonly RabbitMQPublisher _rabbitMQPublisher;
+        public ClienteController(IClienteRepository repository, IPersonaRepository personaRepository, RabbitMQPublisher rabbitMQPublisher)
         {
             _repository = repository;
             _personaRepository = personaRepository;
+            _rabbitMQPublisher = rabbitMQPublisher;
         }
         [HttpGet]
         public async Task<IActionResult> GetClientes()
@@ -32,6 +35,7 @@ namespace MicroserviceOne.Controllers
                 Contrasena = q.Contrasena,
                 Estado = q.Estado
             }).ToList();
+            
             return Ok(clienteResponseDto);
         }
 
@@ -51,6 +55,7 @@ namespace MicroserviceOne.Controllers
                 Contrasena = cliente.Contrasena,
                 Estado = cliente.Estado
             };
+            _rabbitMQPublisher.PublishResponse(clienteResponseDto, "microservicetwo_queue", Guid.NewGuid().ToString());
             return Ok(clienteResponseDto);
         }
 

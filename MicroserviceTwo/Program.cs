@@ -29,14 +29,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ICuentaRepository, CuentaRepository>();
-builder.Services.AddScoped<ICuentaService, CuentaService>();
 builder.Services.AddScoped<IMovimientoRepository, MovimientoRepository>();
-builder.Services.AddScoped<IMovimientoService, MovimientoService>();
-
+builder.Services.AddSingleton<RabbitMQConsumer>();
 // Configuración RabbitMQ
 builder.Services.AddSingleton<IConnection>(sp =>
 {
-    var connFactory = new ConnectionFactory() { HostName = "rabbitmq" }; // hostname de Docker
+    var connFactory = new ConnectionFactory() { HostName = "localhost" }; // hostname de Docker
     return connFactory.CreateConnection();
 });
 
@@ -47,6 +45,7 @@ builder.Services.AddSingleton<IModel>(sp =>
 });
 
 var app = builder.Build();
+var rabbitMQConsumer = app.Services.GetRequiredService<RabbitMQConsumer>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -55,6 +54,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("AllowAll");
+app.MapControllers();
+//app.UseHttpsRedirection();
 app.Run();
 

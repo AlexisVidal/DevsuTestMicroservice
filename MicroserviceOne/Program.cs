@@ -37,12 +37,29 @@ builder.Services.AddSingleton<IConnection>(sp =>
     var connFactory = new ConnectionFactory() { HostName = "localhost" };
     return connFactory.CreateConnection();
 });
+// Registra IModel
 builder.Services.AddSingleton<IModel>(sp =>
 {
     var connection = sp.GetRequiredService<IConnection>();
     return connection.CreateModel();
 });
-builder.Services.AddSingleton<RabbitMQPublisher>();
+// Registra RabbitMQPublisher
+builder.Services.AddSingleton<RabbitMQPublisher>(sp =>
+{
+    var connection = sp.GetRequiredService<IConnection>(); // Ya registrado previamente
+    var channel = connection.CreateModel();
+    return new RabbitMQPublisher(channel);
+});
+
+
+// Registra RabbitMQResponder (asegúrate de que use IModel)
+builder.Services.AddSingleton<RabbitMQResponder>(sp =>
+{
+    var channel = sp.GetRequiredService<IModel>();
+    var repository = sp.GetRequiredService<ClienteRepository>(); // Asegúrate de que esto esté registrado
+    var publisher = sp.GetRequiredService<RabbitMQPublisher>();
+    return new RabbitMQResponder(channel, repository, publisher);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

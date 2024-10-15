@@ -1,5 +1,5 @@
 ﻿using MicroserviceTwo.Models;
-using MicroserviceTwo.Services;
+using MicroserviceTwo.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,18 +9,22 @@ namespace MicroserviceTwo.Controllers
     [ApiController]
     public class MovimientoController : ControllerBase
     {
-        private readonly IMovimientoService _movimientoService;
+        private readonly IMovimientoRepository _repository;
+        public MovimientoController(IMovimientoRepository repository)
+        {
+                _repository = repository;
+        }
         [HttpGet]
         public async Task<IActionResult> GetMovimientos()
         {
-            var movimientos = await _movimientoService.GetMovimientos();
+            var movimientos = await _repository.GetMovimientos();
             return Ok(movimientos);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMovimientoById(int id)
         {
-            var movimiento = await _movimientoService.GetMovimientoById(id);
+            var movimiento = await _repository.GetMovimientoById(id);
             if (movimiento == null)
                 return NotFound();
 
@@ -33,7 +37,7 @@ namespace MicroserviceTwo.Controllers
             if (movimiento == null)
                 return BadRequest();
 
-            await _movimientoService.AddMovimiento(movimiento);
+            await _repository.AddMovimiento(movimiento);
             return CreatedAtAction(nameof(GetMovimientoById), new { id = movimiento.MovimientoId }, movimiento);
         }
 
@@ -43,14 +47,14 @@ namespace MicroserviceTwo.Controllers
             if (movimiento == null || id != movimiento.MovimientoId)
                 return BadRequest();
 
-            await _movimientoService.UpdateMovimiento(movimiento);
+            await _repository.UpdateMovimiento(movimiento);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovimiento(int id)
         {
-            await _movimientoService.DeleteMovimiento(id);
+            await _repository.DeleteMovimiento(id);
             return NoContent();
         }
     }
